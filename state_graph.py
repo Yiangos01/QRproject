@@ -151,8 +151,6 @@ def valid_state(current,next_state):
     if current.der_inflow=='0' and ((current.der_volume=='0' and next_state.der_volume=='+') or (current.der_volume=='0' and current.mar_volume=='max' and next_state.der_volume=='-') or (current.mar_volume=='max' and current.der_volume!=next_state.der_volume)):
         return False
 
-    if (())
-
     if ((current.der_inflow!=next_state.der_inflow) and (current.der_outflow==next_state.der_outflow) and (current.mar_outflow==next_state.mar_outflow) and (current.der_volume==next_state.der_volume) and (current.mar_volume==next_state.mar_volume)):
         return True
     elif current.der_inflow!=next_state.der_inflow:
