@@ -104,7 +104,7 @@ def valid_state(current,next_state):
     if (current.der_inflow=='-' and ((current.mar_inflow=='+' and next_state.mar_inflow=='max') or (current.mar_inflow=='0' and next_state.mar_inflow=='+'))):
         return False
 
-    if (current.der_outflow=='-' and ((current.mar_outflow=='+' and next_state.mar_outflow==max) or (current.mar_outflow=='0' and current_state.mar_outflow=='+'))):
+    if (current.der_outflow=='-' and ((current.mar_outflow=='+' and next_state.mar_outflow==max) or (current.mar_outflow=='0' and current.mar_outflow=='+'))):
         return False
 
     if (current.der_volume=='+' and ((current.mar_volume=='+' and next_state.mar_volume=='0') or (current.mar_volume=='max' and next_state.mar_volume=='-'))):
@@ -157,9 +157,90 @@ def valid_state(current,next_state):
         return False
 
     return True
+def decreaseing_scenario(all_states):
+
+    state3=state('0','0','max','+','max','+')
+    state4=state('0','0','max','0','max','0')
+    state2=state('0','0','max','-','max','-')
+    initial ="000000"
+    final = state('0','0','0','0','0','0')
+    starting_state=state('+','+','max','+','max','+')
+    states=[]
+    edges=[]
+    transitions=[]
+    trace=""
+    graph_states=[]
+    states=[starting_state]
+    graph_states.append(str("I("+str(starting_state.mar_inflow)+","+str(starting_state.der_inflow)+")\nV("+str(starting_state.mar_volume)+","+str(starting_state.der_volume)+")\nO("+str(starting_state.mar_outflow)+","+str(starting_state.der_outflow)+")"))
+    G=digraph()
+    for state1 in states:
+        for index,statei in enumerate(all_states):
+
+            if(valid_state(state1,statei)) and ((statei.der_inflow=='0' and state1.der_inflow=='+') or (statei.der_inflow=='-' and state1.der_inflow=='0') or (statei.der_inflow==state1.der_inflow) or ( statei.mar_inflow=='0' and statei.der_inflow=='0')) and statei!=state3 and statei!=state4 and statei!=state2:
+
+                if statei not in states:
+                    states.append(statei)
+                    graph_states.append(str("I("+str(statei.mar_inflow)+","+str(statei.der_inflow)+")\nV("+str(statei.mar_volume)+","+str(statei.der_volume)+")\nO("+str(statei.mar_outflow)+","+str(statei.der_outflow)+")"))
+
+                    edges.append([graph_states[states.index(state1)],graph_states[states.index(statei)]])
+
+                    transitions.append(((graph_states[states.index(state1)],graph_states[states.index(statei)]),{"label": transition(state1,statei)}))
+
+                    trace+="for state "+str(states.index(state1))+" "+intra_state(state1)+'\n'
+                    trace+='from '+str(states.index(state1))+" to "+str(states.index(statei))+"\n"+inter_state(state1,statei)+'\n'
+                    trace+="for state "+str(states.index(statei))+" "+intra_state(statei)+'\n\n\n'
 
 
-def createStateGraph(all_states):
+
+    print(trace)
+
+    add_edges(
+        add_nodes(G, graph_states),
+        transitions
+        ).render('img/decrease')
+
+
+def increasing_scenario(all_states):
+
+    initial ="000000"
+    final = state('+','+','max','+','max','+')
+    starting_state=state('0','0','0','0','0','0')
+    states=[]
+    edges=[]
+    transitions=[]
+    trace=""
+    graph_states=[]
+    states=[starting_state]
+    graph_states.append(str("I("+str(starting_state.mar_inflow)+","+str(starting_state.der_inflow)+")\nV("+str(starting_state.mar_volume)+","+str(starting_state.der_volume)+")\nO("+str(starting_state.mar_outflow)+","+str(starting_state.der_outflow)+")"))
+    G=digraph()
+    for state1 in states:
+        for index,statei in enumerate(all_states):
+            if(valid_state(state1,statei)) and statei.der_inflow=='+':
+                if statei not in states:
+                    states.append(statei)
+                    graph_states.append(str("I("+str(statei.mar_inflow)+","+str(statei.der_inflow)+")\nV("+str(statei.mar_volume)+","+str(statei.der_volume)+")\nO("+str(statei.mar_outflow)+","+str(statei.der_outflow)+")"))
+
+                    edges.append([graph_states[states.index(state1)],graph_states[states.index(statei)]])
+
+                    transitions.append(((graph_states[states.index(state1)],graph_states[states.index(statei)]),{"label": transition(state1,statei)}))
+
+
+                    trace+="for state "+str(states.index(state1))+" "+intra_state(state1)+'\n'
+                    trace+='from '+str(states.index(state1))+" to "+str(states.index(statei))+"\n"+inter_state(state1,statei)+'\n'
+                    trace+="for state "+str(states.index(statei))+" "+intra_state(statei)+'\n\n\n'
+
+
+
+    print(trace)
+
+
+    add_edges(
+        add_nodes(G, graph_states),
+        transitions
+        ).render('img/increase')
+
+
+def createStateGraph(all_states,):
 
     starting_state = state('0','0','0','0','0','0')
     state3=state('0','0','max','+','max','+')
@@ -188,54 +269,9 @@ def createStateGraph(all_states):
                     #G.add_node(statei)
                     i+=1
                 edges.append([graph_states[states.index(state1)],graph_states[states.index(statei)]])
-
-                transition=""
-
-                if state1.mar_volume!=statei.mar_volume:
-                    if (state1.mar_volume=='+' and statei.mar_volume=='max') or (state1.mar_volume=='0' and statei.mar_volume=='+'):
-                        transition+= " + Volume "
-                    else:
-                        transition+= " - Volume "
-
-                if state1.mar_outflow!=statei.mar_outflow:
-                    if (state1.mar_outflow=='+' and statei.mar_outflow=='max') or (state1.mar_outflow=='0' and statei.mar_outflow=='+'):
-                        transition+= " + outflow"
-                    else:
-                        transition+= " - outflow"
-
-                if state1.mar_inflow!=statei.mar_inflow:
-                    if state1.mar_inflow=='0' and statei.mar_inflow=='+':
-                        transition+= " + inflow"
-                    else:
-                        transition+= " - inflow"
-
-                if state1.der_volume!=statei.der_volume:
-                    if (state1.der_volume=='0' and statei.der_volume=='+'):
-                        transition+= " + der Volume "
-                    elif (state1.der_volume=='-' and statei.der_volume=='0') or  (state1.der_volume=='+' and statei.der_volume=='0'):
-                        transition+= ""
-                    else :
-                        transition+= " - der Volume"
-
-                if state1.der_inflow!=statei.der_inflow:
-                    if (state1.der_inflow=='0' and statei.der_inflow=='+'):
-                        transition+= " + der inflow "
-                    elif (state1.der_inflow=='-' and statei.der_inflow=='0') or  (state1.der_inflow=='+' and statei.der_inflow=='0'):
-                        transition+= ""
-                    else :
-                        transition+= " - der inflow"
-
-                if state1.der_outflow!=statei.der_outflow:
-                    if (state1.der_outflow=='0' and statei.der_outflow=='+'):
-                        transition+= " + der outflow "
-                    elif (state1.der_outflow=='-' and statei.der_outflow=='0') or  (state1.der_outflow=='+' and statei.der_outflow=='0'):
-                        transition+= ""
-                    else :
-                        transition+= " - der outflow"
-
                 #labels = {(0,1):'foo', (2,3):'bar'}
                 #edges.append()
-                transitions.append(((graph_states[states.index(state1)],graph_states[states.index(statei)]),{"label": transition}))
+                transitions.append(((graph_states[states.index(state1)],graph_states[states.index(statei)]),{"label": transition(state1,statei)}))
                 #G.add_edge(states.index(state1),states.index(statei))
                 # print (statei)
     #print (edges)
@@ -249,7 +285,7 @@ def createStateGraph(all_states):
     #add_nodes(G, graph_states)
     styles = {
     'graph': {
-        'label': 'A Fancy Graph',
+        'label': 'State Graph',
         'fontsize': '16',
         'fontcolor': 'white',
         'bgcolor': '#333333',
@@ -281,7 +317,7 @@ def createStateGraph(all_states):
     apply_styles(G,styles)
 
     filename = G.render(filename='img/g4')
-
+    return G
     #print (filename)
     # #save_graph(G)
 
@@ -304,6 +340,53 @@ def createStateGraph(all_states):
     # # plt.savefig(file_name,bbox_inches="tight")
     # pylab.close()
     # del fig
+
+def transition(state1,statei):
+    transition=""
+
+    if state1.mar_volume!=statei.mar_volume:
+        if (state1.mar_volume=='+' and statei.mar_volume=='max') or (state1.mar_volume=='0' and statei.mar_volume=='+'):
+            transition+= " + Volume "
+        else:
+            transition+= " - Volume "
+
+    if state1.mar_outflow!=statei.mar_outflow:
+        if (state1.mar_outflow=='+' and statei.mar_outflow=='max') or (state1.mar_outflow=='0' and statei.mar_outflow=='+'):
+            transition+= " + outflow"
+        else:
+            transition+= " - outflow"
+
+    if state1.mar_inflow!=statei.mar_inflow:
+        if state1.mar_inflow=='0' and statei.mar_inflow=='+':
+            transition+= " + inflow"
+        else:
+            transition+= " - inflow"
+
+    if state1.der_volume!=statei.der_volume:
+        if (state1.der_volume=='0' and statei.der_volume=='+'):
+            transition+= " + der Volume "
+        elif (state1.der_volume=='-' and statei.der_volume=='0'):
+            transition+= " + der Volume"
+        else :
+            transition+= " - der Volume"
+
+    if state1.der_inflow!=statei.der_inflow:
+        if (state1.der_inflow=='0' and statei.der_inflow=='+'):
+            transition+= " + der inflow "
+        elif (state1.der_inflow=='-' and statei.der_inflow=='0'):
+            transition+= " + der inflow "
+        else :
+            transition+= " - der inflow"
+
+    if state1.der_outflow!=statei.der_outflow:
+        if (state1.der_outflow=='0' and statei.der_outflow=='+'):
+            transition+= " + der outflow "
+        elif (state1.der_outflow=='-' and statei.der_outflow=='0'):
+            transition+= " + der outflow "
+        else :
+            transition+= " - der outflow"
+
+    return transition
 
 def apply_styles(graph, styles):
     graph.graph_attr.update(
@@ -372,17 +455,53 @@ def inter_state(state1,state2):
         trace+="water stop flowing. "
 
     if state1.der_inflow=='0' and state2.der_inflow=='+':
-        trace+="we turn the tap, so the rate is increasing. "
+        trace+="we turn the tap, so the rate of water flowing is increasing. "
     elif state1.der_inflow=='+' and state2.der_inflow=='0':
-        trace+="we stoped turning the tap, so the rate of water is steady. "
+        trace+="we stoped turning the tap, so the rate of water flowing is steady. "
     elif state1.der_inflow=='0' and state2.der_inflow=='-':
-        trace+="we are closing the tap , so the rate of water is decreasing. "
+        trace+="we are closing the tap , so the rate of water is flowing decreasing. "
     elif state1.der_inflow=='-' and state2.der_inflow=='0':
-        trace+="we stopped turning the tap , so the rate of water is steaty. "
+        trace+="we stopped turning the tap , so the rate of water is steady. "
 
+    #Volume
+    if state1.mar_volume=='0' and state2.mar_volume=='+':
+        trace+="Container from no water now has some water. "
 
+    if state1.mar_volume=='+' and state2.mar_volume=='0':
+        trace+="Container become empty. "
 
-    return explanation
+    if state1.mar_volume=='+' and state2.mar_volume=='max':
+        trace+="Container from no water now has some water."
+
+    if state1.der_volume=='0' and state2.der_volume=='+':
+        trace+="The amount of water in the container start to increases. "
+    elif state1.der_volume=='+' and state2.der_volume=='0':
+        trace+="The amount of water in the container become steady. "
+    elif state1.der_volume=='0' and state2.der_volume=='-':
+        trace+="The amount of water in the container start to decreases. "
+    elif state1.der_volume=='-' and state2.der_volume=='0':
+        trace+="The amount of water in the container become steady. "
+
+    #Outflow
+    if state1.mar_outflow=='0' and state2.mar_outflow=='+':
+        trace+="Water start flowing thought the sink. "
+
+    if state1.mar_outflow=='+' and state2.mar_outflow=='0':
+        trace+="Water stop flowing thought the sink. "
+
+    if state1.mar_outflow=='+' and state2.mar_outflow=='max':
+        trace+="Water flow become has its maximun capacity. "
+
+    if state1.der_outflow=='0' and state2.der_outflow=='+':
+        trace+="The amount of water flowing out through the sink start increase. "
+    elif state1.der_outflow=='+' and state2.der_outflow=='0':
+        trace+="The amount of water flowing out through the sink becomes steady. "
+    elif state1.der_outflow=='0' and state2.der_outflow=='-':
+        trace+="The amount of water flowing out through the sink start to decrease. "
+    elif state1.der_outflow=='-' and state2.der_outflow=='0':
+        trace+="The amount of water flowing out through the sink becomes steady. "
+
+    return trace
 
 def posible_states():
 
@@ -406,7 +525,9 @@ def main():
     Volume=entity(['0','+','max'])
 
     states=posible_states()
-    createStateGraph(states)
+    G=createStateGraph(states)
+    increasing_scenario(states)
+    decreaseing_scenario(states)
     print(len(states))
     #for state in states:
         #print (state)

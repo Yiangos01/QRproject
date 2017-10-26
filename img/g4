@@ -1,5 +1,5 @@
 digraph {
-	graph [bgcolor="#333333" fontcolor=white fontsize=16 label="A Fancy Graph"]
+	graph [bgcolor="#333333" fontcolor=white fontsize=16 label="State Graph"]
 	node [color=white fillcolor="#006699" fontcolor=white fontname=Helvetica shape=hexagon style=filled]
 	edge [arrowhead=open color=white fontcolor=white fontname=Courier fontsize=12 style=dashed]
 	"I(0,0)
@@ -90,7 +90,7 @@ O(+,+)" [label=" + Volume  + outflow"]
 V(+,+)
 O(+,+)" -> "I(+,0)
 V(+,+)
-O(+,+)" [label=""]
+O(+,+)" [label=" - der inflow"]
 	"I(+,+)
 V(+,+)
 O(+,+)" -> "I(+,+)
@@ -105,12 +105,12 @@ O(+,+)" [label=" - der inflow"]
 V(+,+)
 O(+,+)" -> "I(+,0)
 V(+,0)
-O(+,0)" [label=""]
+O(+,0)" [label=" - der Volume - der outflow"]
 	"I(+,0)
 V(+,+)
 O(+,+)" -> "I(+,0)
 V(max,0)
-O(max,0)" [label=" + Volume  + outflow"]
+O(max,0)" [label=" + Volume  + outflow - der Volume - der outflow"]
 	"I(+,0)
 V(+,+)
 O(+,+)" -> "I(+,0)
@@ -125,17 +125,17 @@ O(+,+)" [label=" + der inflow "]
 V(max,+)
 O(max,+)" -> "I(+,0)
 V(max,+)
-O(max,+)" [label=""]
+O(max,+)" [label=" - der inflow"]
 	"I(+,-)
 V(+,+)
 O(+,+)" -> "I(+,-)
 V(+,0)
-O(+,0)" [label=""]
+O(+,0)" [label=" - der Volume - der outflow"]
 	"I(+,-)
 V(+,+)
 O(+,+)" -> "I(+,-)
 V(max,0)
-O(max,0)" [label=" + Volume  + outflow"]
+O(max,0)" [label=" + Volume  + outflow - der Volume - der outflow"]
 	"I(+,-)
 V(+,+)
 O(+,+)" -> "I(+,-)
@@ -145,7 +145,7 @@ O(max,+)" [label=" + Volume  + outflow"]
 V(+,+)
 O(+,+)" -> "I(+,0)
 V(+,+)
-O(+,+)" [label=""]
+O(+,+)" [label=" + der inflow "]
 	"I(+,0)
 V(+,0)
 O(+,0)" -> "I(+,-)
@@ -190,7 +190,7 @@ O(+,-)" [label=" - der Volume - der outflow"]
 V(+,0)
 O(+,0)" -> "I(+,0)
 V(+,0)
-O(+,0)" [label=""]
+O(+,0)" [label=" + der inflow "]
 	"I(+,-)
 V(max,0)
 O(max,0)" -> "I(+,-)
@@ -200,17 +200,17 @@ O(max,-)" [label=" - der Volume - der outflow"]
 V(max,0)
 O(max,0)" -> "I(+,0)
 V(max,0)
-O(max,0)" [label=""]
+O(max,0)" [label=" + der inflow "]
 	"I(+,-)
 V(max,+)
 O(max,+)" -> "I(+,-)
 V(max,0)
-O(max,0)" [label=""]
+O(max,0)" [label=" - der Volume - der outflow"]
 	"I(+,-)
 V(max,+)
 O(max,+)" -> "I(+,0)
 V(max,+)
-O(max,+)" [label=""]
+O(max,+)" [label=" + der inflow "]
 	"I(+,0)
 V(+,-)
 O(+,-)" -> "I(+,-)
@@ -220,7 +220,7 @@ O(+,-)" [label=" - der inflow"]
 V(+,-)
 O(+,-)" -> "I(+,0)
 V(+,0)
-O(+,0)" [label=""]
+O(+,0)" [label=" + der Volume + der outflow "]
 	"I(+,0)
 V(+,-)
 O(+,-)" -> "I(+,+)
@@ -230,7 +230,7 @@ O(+,-)" [label=" + der inflow "]
 V(+,0)
 O(+,0)" -> "I(+,0)
 V(+,0)
-O(+,0)" [label=""]
+O(+,0)" [label=" - der inflow"]
 	"I(+,+)
 V(+,0)
 O(+,0)" -> "I(+,+)
@@ -240,7 +240,7 @@ O(+,+)" [label=" + der Volume  + der outflow "]
 V(max,0)
 O(max,0)" -> "I(+,0)
 V(max,0)
-O(max,0)" [label=""]
+O(max,0)" [label=" - der inflow"]
 	"I(+,+)
 V(max,0)
 O(max,0)" -> "I(+,+)
@@ -250,12 +250,12 @@ O(max,+)" [label=" + der Volume  + der outflow "]
 V(+,-)
 O(+,-)" -> "I(0,0)
 V(+,-)
-O(+,-)" [label=" - inflow"]
+O(+,-)" [label=" - inflow + der inflow "]
 	"I(+,-)
 V(+,-)
 O(+,-)" -> "I(+,0)
 V(+,-)
-O(+,-)" [label=""]
+O(+,-)" [label=" + der inflow "]
 	"I(+,-)
 V(max,-)
 O(max,-)" -> "I(+,-)
@@ -265,22 +265,22 @@ O(+,-)" [label=" - Volume  - outflow"]
 V(max,-)
 O(max,-)" -> "I(+,0)
 V(max,-)
-O(max,-)" [label=""]
+O(max,-)" [label=" + der inflow "]
 	"I(+,+)
 V(+,-)
 O(+,-)" -> "I(+,0)
 V(+,-)
-O(+,-)" [label=""]
+O(+,-)" [label=" - der inflow"]
 	"I(+,+)
 V(+,-)
 O(+,-)" -> "I(+,+)
 V(+,0)
-O(+,0)" [label=""]
+O(+,0)" [label=" + der Volume + der outflow "]
 	"I(0,0)
 V(+,-)
 O(+,-)" -> "I(0,0)
 V(0,0)
-O(0,0)" [label=" - Volume  - outflow"]
+O(0,0)" [label=" - Volume  - outflow + der Volume + der outflow "]
 	"I(0,0)
 V(+,-)
 O(+,-)" -> "I(0,+)
@@ -305,7 +305,7 @@ O(max,-)" [label=" + der inflow "]
 V(+,-)
 O(+,-)" -> "I(+,0)
 V(+,-)
-O(+,-)" [label=" + inflow"]
+O(+,-)" [label=" + inflow - der inflow"]
 	"I(0,+)
 V(+,-)
 O(+,-)" -> "I(+,+)
@@ -315,15 +315,15 @@ O(+,-)" [label=" + inflow"]
 V(+,-)
 O(+,-)" -> "I(+,+)
 V(+,0)
-O(+,0)" [label=" + inflow"]
+O(+,0)" [label=" + inflow + der Volume + der outflow "]
 	"I(+,+)
 V(max,-)
 O(max,-)" -> "I(+,0)
 V(max,-)
-O(max,-)" [label=""]
+O(max,-)" [label=" - der inflow"]
 	"I(+,+)
 V(max,-)
 O(max,-)" -> "I(+,+)
 V(max,0)
-O(max,0)" [label=""]
+O(max,0)" [label=" + der Volume + der outflow "]
 }

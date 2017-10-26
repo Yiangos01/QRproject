@@ -1,0 +1,37 @@
+digraph {
+	"I(0,0)
+V(0,0)
+O(0,0)"
+	"I(0,+)
+V(0,0)
+O(0,0)"
+	"I(+,+)
+V(0,+)
+O(0,+)"
+	"I(+,+)
+V(+,+)
+O(+,+)"
+	"I(+,+)
+V(max,+)
+O(max,+)"
+	"I(0,0)
+V(0,0)
+O(0,0)" -> "I(0,+)
+V(0,0)
+O(0,0)" [label=" + der inflow "]
+	"I(0,+)
+V(0,0)
+O(0,0)" -> "I(+,+)
+V(0,+)
+O(0,+)" [label=" + inflow + der Volume  + der outflow "]
+	"I(+,+)
+V(0,+)
+O(0,+)" -> "I(+,+)
+V(+,+)
+O(+,+)" [label=" + Volume  + outflow"]
+	"I(+,+)
+V(+,+)
+O(+,+)" -> "I(+,+)
+V(max,+)
+O(max,+)" [label=" + Volume  + outflow"]
+}
