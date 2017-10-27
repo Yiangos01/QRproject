@@ -526,9 +526,11 @@ def main():
 
     states=posible_states()
     G=createStateGraph(states)
+    print("Trace for the senario where the water flowing increasing\n")
     increasing_scenario(states)
+    print("\n\n\nTrace for the senario where the water flowing decreasing\n")
     decreaseing_scenario(states)
-    print(len(states))
+    #print(len(states))
     #for state in states:
         #print (state)
 
